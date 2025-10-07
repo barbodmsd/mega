@@ -1,9 +1,15 @@
-import express from "express";
 import cors from "cors";
+import express from "express";
 import morgan from "morgan";
-import { fileURLToPath } from "url";
 import path from "path";
+import { fileURLToPath } from "url";
 import { catchError, HandleERROR } from "vanta-api";
+import Validation from "./middlewares/Validation.js";
+import authRouter from "./routes/auth.route.js";
+import fileRouter from "./routes/file.route.js";
+import folderRouter from "./routes/folder.route.js";
+import userRouter from "./routes/user.route.js";
+import { swaggerSpec, swaggerUi } from "./utils/swagger.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -11,12 +17,17 @@ export const __dirname = path.dirname(__filename);
 
 // middlewares
 app.use(express.json());
-app.use(express.static(`${__dirname}/public`));
+app.use("/upload", express.static(`${__dirname}/public`));
 app.use(cors());
 app.use(morgan("dev"));
+app.use(Validation);
 
 // routes
-
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
+app.use("/api/file", fileRouter);
+app.use("/api/folder", folderRouter);
 app.use((req, res, next) => {
   return next(new HandleERROR("Invalid Route.", 404));
 });
