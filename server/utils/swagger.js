@@ -26,7 +26,7 @@ const options = {
       },
     },
   },
-  apis: ["../routes/*.js", "../controllers/*.js"],
+  apis: ["./routes/*.js", "./controllers/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
