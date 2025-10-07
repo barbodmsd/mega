@@ -4,6 +4,7 @@ import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
 import { catchError, HandleERROR } from "vanta-api";
+import IsLogin from "./middlewares/IsLogin.js";
 import Validation from "./middlewares/Validation.js";
 import authRouter from "./routes/auth.route.js";
 import fileRouter from "./routes/file.route.js";
@@ -25,6 +26,7 @@ app.use(Validation);
 // routes
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/auth", authRouter);
+app.use(IsLogin);
 app.use("/api/user", userRouter);
 app.use("/api/file", fileRouter);
 app.use("/api/folder", folderRouter);
