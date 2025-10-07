@@ -5,7 +5,6 @@ const authRouter = Router();
 authRouter.route("/register").post(register);
 authRouter.route("/login").post(login);
 export default authRouter;
-
 /**
  * @swagger
  * tags:
@@ -24,49 +23,20 @@ export default authRouter;
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - username
- *               - password
- *             properties:
- *               username:
- *                 type: string
- *                 example: user123
- *               password:
- *                 type: string
- *                 example: pass1234
+ *             $ref: '#/components/schemas/AuthCredentials'
  *     responses:
  *       201:
  *         description: User successfully created
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 user:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                     username:
- *                       type: string
- *                     role:
- *                       type: string
- *                 token:
- *                   type: string
- *                 message:
- *                   type: string
- *                   example: User successfully created.
+ *               $ref: '#/components/schemas/AuthResponse'
  *       400:
  *         description: Invalid input or password does not meet requirements
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Username and Password are required.
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 
 /**
@@ -80,54 +50,73 @@ export default authRouter;
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - username
- *               - password
- *             properties:
- *               username:
- *                 type: string
- *                 example: user123
- *               password:
- *                 type: string
- *                 example: pass1234
+ *             $ref: '#/components/schemas/AuthCredentials'
  *     responses:
  *       200:
  *         description: Login successful, JWT returned
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 user:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                     username:
- *                       type: string
- *                     role:
- *                       type: string
- *                 token:
- *                   type: string
- *                 message:
- *                   type: string
- *                   example: Login successfully.
+ *               $ref: '#/components/schemas/AuthResponse'
  *       400:
  *         description: Username or password is incorrect
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Username or Password is incorrect.
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 
 /**
  * @swagger
  * components:
+ *   schemas:
+ *     AuthCredentials:
+ *       type: object
+ *       required:
+ *         - username
+ *         - password
+ *       properties:
+ *         username:
+ *           type: string
+ *           example: user123
+ *         password:
+ *           type: string
+ *           example: pass1234
+ *     UserBasic:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: 652b26d90f4a9d2c4e22b4a2
+ *         username:
+ *           type: string
+ *           example: user123
+ *         role:
+ *           type: string
+ *           example: user
+ *     AuthResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         user:
+ *           $ref: '#/components/schemas/UserBasic'
+ *         token:
+ *           type: string
+ *           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *         message:
+ *           type: string
+ *           example: User successfully created.
+ *     ErrorResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: false
+ *         message:
+ *           type: string
+ *           example: Username or Password are required.
  *   securitySchemes:
  *     bearerAuth:
  *       type: http
