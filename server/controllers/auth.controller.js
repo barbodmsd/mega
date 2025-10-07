@@ -19,7 +19,7 @@ export const register = catchAsync(async (req, res, next) => {
     { id: newUser._id, role: newUser.role },
     process.env.JWT_SECRET
   );
-  new Res(res, 201, {
+  return new Res(res, 201, {
     user: {
       username: newUser.username,
       role: newUser.role,
@@ -45,7 +45,7 @@ export const login = catchAsync(async (req, res, next) => {
     { id: targetUser._id, role: targetUser.role },
     process.env.JWT_SECRET
   );
-  new Res(res, 200, {
+  return new Res(res, 200, {
     user: {
       _id: targetUser._id,
       username: targetUser.username,
