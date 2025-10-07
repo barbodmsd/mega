@@ -11,6 +11,7 @@ import fileRouter from "./routes/file.route.js";
 import folderRouter from "./routes/folder.route.js";
 import userRouter from "./routes/user.route.js";
 import { swaggerSpec, swaggerUi } from "./utils/swagger.js";
+import uploadRouter from "./routes/upload.route.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -27,6 +28,7 @@ app.use(Validation);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/auth", authRouter);
 app.use(IsLogin);
+app.use("/api/upload", uploadRouter);
 app.use("/api/user", userRouter);
 app.use("/api/file", fileRouter);
 app.use("/api/folder", folderRouter);
