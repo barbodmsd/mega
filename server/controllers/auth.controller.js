@@ -16,14 +16,14 @@ export const register = catchAsync(async (req, res, next) => {
   const hashedPass = bcryptjs.hashSync(password, 12);
   const newUser = await User.create({ username, password: hashedPass });
   const token = jwt.sign(
-    { id: newUser._id, role: newUser.role },
+    { id: newUser._id, role: newUser.role, username: newUser.username },
     process.env.JWT_SECRET
   );
   return new Res(res, 201, {
     user: {
       username: newUser.username,
       role: newUser.role,
-      _id: newUser._id,
+      id: newUser._id,
     },
     token,
     message: "User successfully created.",
@@ -42,12 +42,16 @@ export const login = catchAsync(async (req, res, next) => {
   if (!isMatch)
     return next(new HandleERROR("Username or Password is incorrect.", 400));
   const token = jwt.sign(
-    { id: targetUser._id, role: targetUser.role },
+    {
+      id: targetUser._id,
+      role: targetUser.role,
+      username: targetUser.username,
+    },
     process.env.JWT_SECRET
   );
   return new Res(res, 200, {
     user: {
-      _id: targetUser._id,
+      id: targetUser._id,
       username: targetUser.username,
       role: targetUser.role,
     },

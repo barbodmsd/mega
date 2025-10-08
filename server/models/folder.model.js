@@ -2,10 +2,10 @@ import { Schema, model } from "mongoose";
 
 const folderSchema = Schema(
   {
-    title: {
+    folderName: {
       type: String,
-      required: [true, "Title is required."],
-      match: [/^[a-zA-Z0-9_-]{3,15}$/g, "invalid Title."],
+      required: [true, "Folder Name is required."],
+      match: [/^[a-zA-Z0-9_-]{0,15}$/g, "invalid Folder Name."],
       trim: true,
     },
     userId: {

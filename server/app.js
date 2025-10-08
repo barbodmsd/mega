@@ -9,9 +9,9 @@ import Validation from "./middlewares/Validation.js";
 import authRouter from "./routes/auth.route.js";
 import fileRouter from "./routes/file.route.js";
 import folderRouter from "./routes/folder.route.js";
+import uploadRouter from "./routes/upload.route.js";
 import userRouter from "./routes/user.route.js";
 import { swaggerSpec, swaggerUi } from "./utils/swagger.js";
-import uploadRouter from "./routes/upload.route.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);

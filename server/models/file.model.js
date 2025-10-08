@@ -6,7 +6,7 @@ const fileSchema = Schema(
       type: String,
       required: [true, "FileName is required."],
     },
-    supFolderId: {
+    folderId: {
       type: Schema.Types.ObjectId,
       ref: "Folder",
     },

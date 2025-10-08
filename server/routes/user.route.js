@@ -11,131 +11,12 @@ userRouter.route("/").get(IsAdmin, getAllUsers);
 userRouter.route("/:id").get(getUserById).delete(IsAdmin, deleteUser);
 
 export default userRouter;
+
 /**
  * @swagger
  * tags:
- *   name: Users
- *   description: User management (admin only for list/delete)
- */
-
-/**
- * @swagger
- * /api/user:
- *   get:
- *     summary: Get all users
- *     description: Retrieve a paginated list of all users (admin only).
- *     tags: [Users]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           example: 1
- *         description: Page number for pagination
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           example: 10
- *         description: Number of results per page
- *       - in: query
- *         name: sort
- *         schema:
- *           type: string
- *           example: createdAt
- *         description: Sort by field (prefix with '-' for descending)
- *     responses:
- *       200:
- *         description: List of all users (password field excluded)
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: success
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/User'
- *       401:
- *         description: Unauthorized (missing or invalid token)
- *       403:
- *         description: Forbidden (only admin)
- */
-
-/**
- * @swagger
- * /api/user/{id}:
- *   get:
- *     summary: Get a user by ID
- *     description: Retrieve a single user by ID (Admin can access any user, normal user only self).
- *     tags: [Users]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The user's ID
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: User retrieved successfully (password excluded)
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: success
- *                 data:
- *                   $ref: '#/components/schemas/User'
- *       404:
- *         description: User not found
- *       401:
- *         description: Unauthorized
- *
- *   delete:
- *     summary: Delete a user by ID
- *     description: Delete a user by ID (admin only). Cannot delete yourself.
- *     tags: [Users]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The user's ID
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: User deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: success
- *                 message:
- *                   type: string
- *                   example: User deleted successfully.
- *       400:
- *         description: You cannot delete yourself
- *       404:
- *         description: User not found
- *       401:
- *         description: Unauthorized
- *       403:
- *         description: Forbidden (only admin)
+ *   name: User
+ *   description: User management (Admin-only and self-access routes)
  */
 
 /**
@@ -147,23 +28,139 @@ export default userRouter;
  *       properties:
  *         _id:
  *           type: string
- *           example: 6703eebc74c63feda4717b0d
+ *           example: "652f8b5c1c8f88d91e9d8a32"
  *         username:
  *           type: string
- *           example: johndoe
+ *           example: "john_doe"
  *         role:
  *           type: string
  *           enum: [admin, user]
- *           example: user
+ *           example: "user"
  *         createdAt:
  *           type: string
  *           format: date-time
- *           example: 2025-10-07T12:00:00.000Z
+ *           example: "2025-10-08T12:00:00.000Z"
  *         updatedAt:
  *           type: string
  *           format: date-time
- *           example: 2025-10-07T12:10:00.000Z
- *       required:
- *         - username
- *         - role
+ *           example: "2025-10-08T12:00:00.000Z"
+ *     UserListResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/User'
+ *         message:
+ *           type: string
+ *           example: "List of users"
+ *     SingleUserResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/User'
+ *         message:
+ *           type: string
+ *           example: "User fetched successfully."
+ *     DeleteUserResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         deletedUser:
+ *           $ref: '#/components/schemas/User'
+ *         message:
+ *           type: string
+ *           example: "User deleted successfully."
+ */
+
+/**
+ * @swagger
+ * /api/user:
+ *   get:
+ *     summary: Get all users
+ *     tags: [User]
+ *     description: Retrieve all users (Admin access only)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully fetched all users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserListResponse'
+ *       401:
+ *         description: Unauthorized - Token missing or invalid
+ *       403:
+ *         description: Forbidden - Only admin can access
+ */
+
+/**
+ * @swagger
+ * /api/user/{id}:
+ *   get:
+ *     summary: Get user by ID
+ *     tags: [User]
+ *     description: Get specific user info. Admin can fetch any user, normal users can only fetch their own info.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User ID
+ *         example: "652f8b5c1c8f88d91e9d8a32"
+ *     responses:
+ *       200:
+ *         description: User fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SingleUserResponse'
+ *       401:
+ *         description: Unauthorized - Token missing or invalid
+ *       404:
+ *         description: User not found
+ *
+ *   delete:
+ *     summary: Delete user by ID
+ *     tags: [User]
+ *     description: Delete a user by ID (Admin only). Cannot delete yourself.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of user to delete
+ *         example: "652f8b5c1c8f88d91e9d8a32"
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/DeleteUserResponse'
+ *       400:
+ *         description: Cannot delete yourself
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Only admin can delete
+ *       404:
+ *         description: User not found
  */
