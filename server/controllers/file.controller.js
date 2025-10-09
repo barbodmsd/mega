@@ -10,7 +10,7 @@ export const getAllFiles = catchAsync(async (req, res, next) => {
     .sort()
     .limitFields()
     .paginate()
-    .populate([{ path: "userId", select: "username" }]);
+    .populate([{ path: "folderId" }]);
   const result = await features.execute();
   return new Res(res, 200, result);
 });

@@ -12,7 +12,7 @@ export const getAllFolders = catchAsync(async (req, res, next) => {
     .sort()
     .limitFields()
     .paginate()
-    .populate([{ path: "userId", select: "username" }, { path: "files" }]);
+    .populate([{ path: "files" }]);
   const result = await features.execute();
   return new Res(res, 200, result);
 });
