@@ -41,7 +41,7 @@ Each registered user automatically gets a **personal folder** where all uploaded
 
 ```
 
-mega-backend/
+mega/server
 ├── src/
 │   ├── controllers/
 │   ├── middlewares/
